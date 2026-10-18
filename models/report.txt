@@ -1,0 +1,9 @@
+run: improved-v2
+dataset: iris_v2.csv
+accuracy: 0.9474
+f1_macro: 0.9466
+
+confusion matrix:
+[[13  0  0]
+ [ 0 12  1]
+ [ 0  1 11]]
