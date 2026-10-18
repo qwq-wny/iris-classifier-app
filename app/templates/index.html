@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Iris Flower Predictor</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f7fa; }
+    .card { background: white; max-width: 430px; margin: 60px auto;
+            padding: 30px; border-radius: 10px; box-shadow: 0 2px 8px #ddd; }
+    label { display: block; margin-top: 14px; font-size: 14px; }
+    input { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }
+    button { margin-top: 20px; width: 100%; padding: 10px; background: #4a90d9;
+             color: white; border: none; border-radius: 5px; font-size: 16px; }
+    .result { margin-top: 20px; padding: 12px; border-radius: 5px; }
+    .ok { background: #e6f7e6; color: #2c6e2c; }
+    .error { background: #fdecea; color: #a33; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Iris Flower Predictor</h1>
+    <p>Type the 4 measurements of the flower (in cm):</p>
+
+    {% if prediction %}
+      <div class="result ok">Prediction: <b>{{ prediction }}</b></div>
+    {% endif %}
+    {% if error %}
+      <div class="result error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/predict">
+      <label>Sepal length (cm)<input name="sepal_length" step="any" required></label>
+      <label>Sepal width (cm)<input name="sepal_width" step="any" required></label>
+      <label>Petal length (cm)<input name="petal_length" step="any" required></label>
+      <label>Petal width (cm)<input name="petal_width" step="any" required></label>
+      <button type="submit">Predict</button>
+    </form>
+  </div>
+</body>
+</html>

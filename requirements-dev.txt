@@ -1,0 +1,4 @@
+dvc[azure]
+mlflow
+pytest
+ruff
