@@ -1,0 +1,22 @@
+name: Production build
+
+# When a pull request is merged into main, we build the production image.
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-production:
+    name: Create .env and build the production image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Create the production .env file from GitHub secrets
+        run: |
+          echo "APP_ENV=production" >> .env
+          echo "MODEL_NAME=${{ secrets.PRODUCTION_MODEL_NAME }}" >> .env
+
+      - name: Build the production Docker image
+        run: docker build -t iris-classifier-app:production .

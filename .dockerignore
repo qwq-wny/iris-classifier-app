@@ -1,0 +1,17 @@
+# Files we do NOT need inside the Docker image.
+.git
+.github
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+tests
+ml
+data
+.dvc
+mlruns
+.env
+*.md
+requirements-dev.txt

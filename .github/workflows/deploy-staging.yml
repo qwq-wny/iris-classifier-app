@@ -1,0 +1,22 @@
+name: Staging build
+
+# When a pull request is merged into staging, we build the staging image.
+on:
+  push:
+    branches: [staging]
+
+jobs:
+  build-staging:
+    name: Create .env and build the staging image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Create the staging .env file from GitHub secrets
+        run: |
+          echo "APP_ENV=staging" >> .env
+          echo "MODEL_NAME=${{ secrets.STAGING_MODEL_NAME }}" >> .env
+
+      - name: Build the staging Docker image
+        run: docker build -t iris-classifier-app:staging .

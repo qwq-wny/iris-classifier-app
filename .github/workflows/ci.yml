@@ -1,0 +1,44 @@
+name: CI
+
+# CI runs for every pull request to a protected branch,
+# and also when something is pushed to dev.
+on:
+  pull_request:
+    branches: [dev, staging, main]
+  push:
+    branches: [dev]
+
+jobs:
+  tests:
+    name: Run tests and code checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install packages
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Lint (ruff check)
+        run: ruff check .
+
+      - name: Check formatting (ruff format)
+        run: ruff format --check .
+
+      - name: Run all tests
+        run: pytest -v
+
+  docker:
+    name: Build the Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Build the image (just to check it works)
+        run: docker build -t iris-classifier-app:ci .
