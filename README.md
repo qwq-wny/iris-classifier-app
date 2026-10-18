@@ -1,5 +1,7 @@
 ﻿# Iris Classifier App
 
+![CI](https://github.com/qwq-wny/iris-classifier-app/actions/workflows/ci.yml/badge.svg?branch=main)
+
 A very small machine learning project for a university course.
 The app predicts the type of an iris flower (setosa, versicolor or virginica)
 from 4 measurements: sepal length, sepal width, petal length and petal width.
