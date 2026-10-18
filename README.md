@@ -41,7 +41,7 @@ python -m venv .venv
 .venv\Scripts\activate        # Windows 系统
 pip install -r requirements.txt -r requirements-dev.txt
 python -m ml.train --version improved
-python app/main.py
+python -m app.main
 ```
 
 然后在浏览器打开 http://127.0.0.1:5000
