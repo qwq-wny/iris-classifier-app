@@ -1,107 +1,108 @@
-﻿# Iris Classifier App
+﻿# 鸢尾花分类器（Iris Classifier App）
 
 
-A very small machine learning project for a university course.
-The app predicts the type of an iris flower (setosa, versicolor or virginica)
-from 4 measurements: sepal length, sepal width, petal length and petal width.
+这是一个为大学课程做的小型机器学习项目。
+应用根据 4 个测量值（花萼长度、花萼宽度、花瓣长度、花瓣宽度）
+来预测鸢尾花的品种：山鸢尾（setosa）、变色鸢尾（versicolor）
+或维吉尼亚鸢尾（virginica）。
 
-The project shows the full workflow that the course asked for:
+项目完整展示了课程要求的整个工作流程：
 
-- a trained machine learning model (scikit-learn),
-- tests for the app (pytest),
-- Docker,
-- CI/CD with GitHub Actions,
-- data versioning with DVC,
-- experiment tracking with MLflow.
+- 训练好的机器学习模型（scikit-learn），
+- 应用的自动化测试（pytest），
+- Docker 容器化，
+- 使用 GitHub Actions 的 CI/CD，
+- 使用 DVC 进行数据版本管理，
+- 使用 MLflow 记录机器学习实验。
 
-## How the app works
+## 应用的运行原理
 
-1. The user opens the web page and types 4 numbers.
-2. The numbers go to a logistic regression model.
-3. The model answers with one flower name.
+1. 用户打开网页，输入 4 个数字。
+2. 数字被送入一个逻辑回归模型。
+3. 模型返回一个花的品种名称。
 
-## Project structure
+## 项目结构
 
 ```
-app/                  the Flask web app
-ml/                   training code, configs and MLOps docs
-data/                 csv files (tracked with DVC, not with git)
-models/               the saved model (model.pkl)
-tests/                pytest tests
-.github/workflows/    CI and CD pipelines
-Dockerfile            instructions to build the app image
+app/                  Flask 网页应用
+ml/                   训练代码、配置文件和 MLOps 文档
+data/                 csv 数据文件（用 DVC 管理，不放进 git）
+models/               保存好的模型（model.pkl）
+tests/                pytest 测试
+.github/workflows/    CI 和 CD 流水线
+Dockerfile            构建应用镜像的说明文件
 ```
 
-## How to run it on your computer
+## 如何在自己的电脑上运行
 
 ```bash
 python -m venv .venv
-.venv\Scripts\activate        # on Windows
+.venv\Scripts\activate        # Windows 系统
 pip install -r requirements.txt -r requirements-dev.txt
 python -m ml.train --version improved
 python app/main.py
 ```
 
-Then open http://127.0.0.1:5000 in a browser.
+然后在浏览器打开 http://127.0.0.1:5000
 
-## How to run the tests
+## 如何运行测试
 
 ```bash
 pytest -v
 ```
 
-## How to run it with Docker
+## 如何用 Docker 运行
 
 ```bash
 docker build -t iris-classifier-app .
 docker run -p 5000:5000 iris-classifier-app
 ```
 
-## How the data is versioned (DVC)
+## 数据是如何做版本管理的（DVC）
 
-The csv files live in `data/` but they are NOT inside git.
-Git only stores a small pointer file called `data.dvc`.
-The real files are stored in an Azure Storage container.
+csv 数据文件放在 `data/` 文件夹里，但它们**不**保存在 git 中。
+git 只保存一个很小的指针文件 `data.dvc`。
+真正的数据文件保存在 Azure Storage 的存储容器中。
 
-To download the data:
+下载数据的方法：
 
 ```bash
 pip install -r requirements-dev.txt
 dvc pull
 ```
 
-More details: [ml/README_data.md](ml/README_data.md)
+更多说明：[ml/README_data.md](ml/README_data.md)
 
-## How the experiments are tracked (MLflow)
+## 实验是如何记录的（MLflow）
 
-Every training run is saved to MLflow (folder `mlruns/`).
-To see the runs with a simple UI:
+每一次训练都会记录到 MLflow（保存在 `mlruns/` 文件夹）。
+用一个简单的界面查看所有实验：
 
 ```bash
 mlflow ui
 ```
 
-Then open http://127.0.0.1:5000.
+然后打开 http://127.0.0.1:5000
 
-More details: [ml/README_experiments.md](ml/README_experiments.md)
+更多说明：[ml/README_experiments.md](ml/README_experiments.md)
 
-## How code goes from commit to production
+## 代码是如何从提交走向生产的
 
-1. New work is done in a `feature/...` branch.
-2. A pull request merges the feature branch into `dev`.
-   CI runs: tests + code checks + Docker build.
-   The pull request can only be merged if CI is green.
-3. A pull request merges `dev` into `staging`.
-   The staging pipeline creates a staging `.env` file and builds the staging image.
-4. A pull request merges `staging` into `main`.
-   The production pipeline creates a production `.env` file and builds the
-   production image.
+1. 新的开发工作在 `feature/...` 分支上进行。
+2. 通过 Pull Request 把 feature 分支合并进 `dev`。
+   此时会运行 CI：测试 + 代码检查 + Docker 构建。
+   只有 CI 全部通过（绿色），Pull Request 才能合并。
+3. 通过 Pull Request 把 `dev` 合并进 `staging`。
+   staging 流水线会用 GitHub Secrets 生成 staging 环境的 `.env` 文件，
+   并构建 staging 镜像。
+4. 通过 Pull Request 把 `staging` 合并进 `main`。
+   生产流水线会生成生产环境的 `.env` 文件，并构建生产镜像。
 
-| Branch | What it is for | Pipeline that runs |
+| 分支 | 用途 | 会运行的流水线 |
 |---|---|---|
-| feature/... | new work | CI (when a PR is opened) |
-| dev | combine features, run tests | CI on every push and PR |
-| staging | test the app like production | CI on PR + staging build on merge |
-| main | the final version | CI on PR + production build on merge |
+| feature/... | 开发新功能 | CI（打开 PR 时运行） |
+| dev | 合并各功能、运行测试 | 每次推送和 PR 都运行 CI |
+| staging | 像生产环境一样测试应用 | PR 时运行 CI + 合并时构建 staging 镜像 |
+| main | 最终正式版本 | PR 时运行 CI + 合并时构建生产镜像 |
 
-More details: [DEPLOYMENT.md](DEPLOYMENT.md)
+更多说明：[DEPLOYMENT.md](DEPLOYMENT.md)
