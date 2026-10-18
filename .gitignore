@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Testing and tools
+.pytest_cache/
+.ruff_cache/
+
+# Environment and secrets
+.env
+
+# Big folders that are not needed in git
+# (data/ is tracked with DVC, see data.dvc)
+/data
