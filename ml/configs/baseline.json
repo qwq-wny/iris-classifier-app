@@ -1,0 +1,8 @@
+{
+  "run_name": "baseline-v1",
+  "dataset": "iris_v1.csv",
+  "clean_data": false,
+  "use_scaler": false,
+  "C": 1.0,
+  "max_iter": 200
+}
