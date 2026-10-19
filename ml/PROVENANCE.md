@@ -55,6 +55,10 @@ python -m ml.train --version improved
 | Artifact path | `mlruns/1/7c586a346c3945a89a25b09f13a70fec/artifacts/` | `mlruns/1/6e9ceeef46394dee9af782ba3d7ebbe9/artifacts/` |
 | Used by the app | no | yes (`models/model.pkl`) |
 
+A third run, `tuned-v2` (`6a6b28106bf9420694ba62a64a24979d`, Git `2976a3f`,
+DVC `0fba930d...dir`), comes from `ml/tune.py`. It scored 0.9211 / 0.9195 on the
+hold-out set, so it was rejected and the app still uses improved-v2.
+
 The app model `models/model.pkl` and the improved-v2 artifact have the same
 SHA-256 (`ac5498dd82fdfdac86cbffa5bf4d71bb5b3a82e50e15789dd0de7145a5cea8ee`),
 and `models/report.txt` is identical to the artifact report.

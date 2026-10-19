@@ -49,3 +49,16 @@ for case in sample["cases"]:
     assert model.predict([case["input"]])[0] == case["expected"], case
 print(f"{len(sample['cases'])} cases passed")
 ```
+
+## Challenger model (not in production)
+
+`python -m ml.tune` trains a grid-search variant and saves it separately as
+`models/model_tuned.pkl`. It is **not** loaded by the app.
+
+| Item | Value |
+|---|---|
+| MLflow run ID | `6a6b28106bf9420694ba62a64a24979d` |
+| Best parameters | `C=1.0`, `class_weight=None` |
+| CV macro F1 (5-fold) | 0.9715 |
+| Hold-out accuracy / macro F1 | 0.9211 / 0.9195 |
+| Why not promoted | lower hold-out score than improved-v2 (0.9474 / 0.9466) |
