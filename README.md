@@ -36,10 +36,9 @@ Dockerfile            构建应用镜像的说明文件
 ## 如何在自己的电脑上运行
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate        # Windows 系统
-pip install -r requirements.txt -r requirements-dev.txt
-python -m ml.train --version improved
+cd C:\Users\31102\OneDrive\桌面\新建文件夹\iris-classifier-app
+.venv\Scripts\activate
+pytest -v
 python -m app.main
 ```
 
