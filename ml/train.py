@@ -93,6 +93,7 @@ def train(version):
 
     mlflow.set_experiment("iris-classifier")
     with mlflow.start_run(run_name=config["run_name"]):
+        mlflow.set_tag("stage", config.get("stage", "experiment"))
         mlflow.log_param("git_commit", get_git_commit())
         mlflow.log_param("dvc_data_hash", get_dvc_data_hash())
         mlflow.log_param("dataset_version", version)

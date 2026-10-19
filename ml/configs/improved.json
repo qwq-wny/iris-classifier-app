@@ -4,5 +4,6 @@
   "clean_data": true,
   "use_scaler": true,
   "C": 10.0,
-  "max_iter": 500
+  "max_iter": 500,
+  "stage": "candidate"
 }
