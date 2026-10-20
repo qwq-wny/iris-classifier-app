@@ -24,6 +24,19 @@ def get_git_commit():
         return "unknown"
 
 
+def get_dvc_data_hash():
+    """Return the DVC hash of the data folder, read from data.dvc."""
+    try:
+        with open("data.dvc", encoding="utf-8") as file:
+            for line in file:
+                key, _, value = line.strip().removeprefix("-").strip().partition(":")
+                if key == "md5":
+                    return value.strip()
+    except OSError:
+        pass
+    return "unknown"
+
+
 def load_config(version):
     """Read the json config file for one experiment."""
     config_path = os.path.join(os.path.dirname(__file__), "configs", f"{version}.json")
@@ -80,7 +93,9 @@ def train(version):
 
     mlflow.set_experiment("iris-classifier")
     with mlflow.start_run(run_name=config["run_name"]):
+        mlflow.set_tag("stage", config.get("stage", "experiment"))
         mlflow.log_param("git_commit", get_git_commit())
+        mlflow.log_param("dvc_data_hash", get_dvc_data_hash())
         mlflow.log_param("dataset_version", version)
         mlflow.log_param("dataset_file", config["dataset"])
         mlflow.log_param("model_type", "LogisticRegression")

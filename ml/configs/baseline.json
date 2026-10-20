@@ -4,5 +4,6 @@
   "clean_data": false,
   "use_scaler": false,
   "C": 1.0,
-  "max_iter": 200
+  "max_iter": 200,
+  "stage": "baseline"
 }

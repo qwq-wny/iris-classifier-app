@@ -1,0 +1,11 @@
+run: tuned-v2
+dataset: iris_v2.csv
+best_params: C=1.0, class_weight=None
+cv_best_f1_macro: 0.9715
+accuracy: 0.9211
+f1_macro: 0.9195
+
+confusion matrix:
+[[13  0  0]
+ [ 0 12  1]
+ [ 0  2 10]]

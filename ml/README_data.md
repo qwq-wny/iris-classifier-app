@@ -29,10 +29,10 @@ The cleaned version with exactly the 150 original flowers:
 
 ## Which commit belongs to which version
 
-| Dataset version | Files in `data/` | Git commit |
-|---|---|---|
-| v1 | iris_v1.csv | `0e0a9e4` |
-| v2 | iris_v1.csv + iris_v2.csv | `8ec6f2f` |
+| Dataset version | Files in `data/` | Git commit | DVC hash |
+|---|---|---|---|
+| v1 | iris_v1.csv | `0e0a9e4` | `c4f884dbd8910a355ec91c2672ecaa68.dir` |
+| v2 | iris_v1.csv + iris_v2.csv | `8ec6f2f` | `0fba930d9fb57b40b64019e040011e66.dir` |
 
 Because git and DVC work together, we can always answer the question:
 "which exact dataset version produced this model?" - we look at the commit,
@@ -41,9 +41,33 @@ read the `data.dvc` pointer, and DVC knows the exact files.
 ## How DVC is used
 
 - Git stores only the small pointer file `data.dvc`, not the csv files.
-- The real csv files are stored in an Azure Blob Storage container
-  (`azure://irisdata/data`, see `.dvc/config`).
-- `dvc pull` downloads the data, `dvc push` uploads a new version.
-- To connect to Azure, set `AZURE_STORAGE_ACCOUNT_NAME` and
-  `AZURE_STORAGE_ACCOUNT_KEY` as environment variables on your computer.
-  No password is stored inside git.
+  `data/` is listed in `.gitignore`, so the csv files never enter git.
+- The pointer stores the hash of the whole `data/` folder. Each dataset
+  version above maps to one hash, and each MLflow run records that hash as
+  the `dvc_data_hash` parameter.
+- `dvc push` uploads the data to the remote, `dvc pull` downloads it.
+
+## Azure remote status
+
+The Azure remote is **not configured yet**: `.dvc/config` is still empty, so
+`dvc remote list` prints nothing and `dvc pull` fails with
+`No remote provided and no default remote set`.
+
+Until the storage account is provided, rebuild the data locally (it is created
+deterministically from scikit-learn):
+
+```bash
+python -m ml.make_datasets
+```
+
+Once the Azure account is available:
+
+```bash
+dvc remote add -d azure azure://<container>/<path>
+export AZURE_STORAGE_ACCOUNT_NAME=<name>
+export AZURE_STORAGE_ACCOUNT_KEY=<key>
+dvc push
+```
+
+Credentials are kept in environment variables (or in `.dvc/config.local`,
+which DVC ignores on purpose). No password is stored inside git.
